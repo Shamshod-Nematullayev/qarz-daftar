@@ -1,0 +1,16 @@
+{
+  "name": "qarz-daftar",
+  "version": "1.0.0",
+  "description": "This is real solotion for debt notes for stores",
+  "main": "index.js",
+  "author": "Shamshod Ne'matullayev",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^17.2.4",
+    "express": "^5.2.1",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6"
+  }
+}
