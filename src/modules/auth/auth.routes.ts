@@ -1,15 +1,14 @@
 import { Router } from "express";
+import { changePassword, getUserInfo, login } from "./auth.controllers";
+import { catchAsync } from "../../utils/catchAsync";
+import { isAuth } from "../../middlewares/isAuth";
 
 const router = Router();
 
-router.post("/login", (req, res) => {
-  // Handle login logic here
-  res.send("Login endpoint");
-});
+router.post("/login", catchAsync(login));
 
-router.get("/me", (req, res) => {
-  // Handle fetching user info logic here
-  res.send("User info endpoint");
-});
+router.get("/me", isAuth, catchAsync(getUserInfo));
+
+router.put("/change-password", isAuth, catchAsync(changePassword));
 
 export default router;
