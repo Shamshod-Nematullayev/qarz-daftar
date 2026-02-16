@@ -8,6 +8,7 @@ import {
   getDebts,
   updateDebtStatus,
 } from "./debts.service";
+import { socketIoService } from "../../services/socketIoService";
 
 const createDebtBodySchema = z.object({
   productName: z.string(),
@@ -43,6 +44,14 @@ export const createDebtController = async (req: Request, res: Response) => {
     dueDate,
   );
 
+  socketIoService.emitToUser(req.user.id, "new_debt", {
+    id: debt.id,
+    productName: debt.product_name,
+    amount: debt.amount,
+    givenDate: debt.given_date,
+    dueDate: debt.due_date,
+    status: debt.status,
+  });
   res.status(201).json(debt);
 };
 
@@ -71,6 +80,14 @@ export const payDebtController = async (req: Request, res: Response) => {
   if (!debt) {
     return res.status(404).json({ message: "Debt not found" });
   }
+  socketIoService.emitToUser(req.user.id, "debt_paid", {
+    id: debt.id,
+    productName: debt.product_name,
+    amount: debt.amount,
+    givenDate: debt.given_date,
+    dueDate: debt.due_date,
+    status: debt.status,
+  });
   res.json(debt);
 };
 
