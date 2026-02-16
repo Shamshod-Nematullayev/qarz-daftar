@@ -1,4 +1,5 @@
 import { pool } from "../../config/db";
+import { BadRequestError } from "../../middlewares/globalErrorHandler";
 
 export const createCustomer = async (
   companyId: number,
@@ -15,7 +16,7 @@ export const createCustomer = async (
     return rows[0];
   } catch (error: any) {
     if (error.code === "23505") {
-      throw new Error("Phone already exists");
+      throw new BadRequestError("Phone already exists");
     }
     throw error;
   }
