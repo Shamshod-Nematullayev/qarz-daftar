@@ -25,7 +25,8 @@ export const initTables = async () => {
         name VARCHAR(255) NOT NULL,
         phone VARCHAR(20) NOT NULL, UNIQUE (company_id, phone),
         company_id INTEGER REFERENCES companies(id) ON DELETE CASCADE NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        deleted_at TIMESTAMP NULL
     )`);
 
   // DEBTS
@@ -38,7 +39,8 @@ export const initTables = async () => {
         due_date TIMESTAMP NOT NULL,
         status VARCHAR(20) NOT NULL DEFAULT 'KUTILMOQDA' CHECK (status IN ('KUTILMOQDA', 'TOLANGAN', 'MUDDAT_OTGAN')),
         company_id INTEGER REFERENCES companies(id) ON DELETE CASCADE NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        deleted_at TIMESTAMP NULL
     )`);
 
   // INDEXES

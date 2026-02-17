@@ -1,7 +1,7 @@
 import express from "express";
 
+import { isAuth } from "./middlewares/isAuth";
 const app = express();
-
 app.use(express.json());
 
 // Import routes
@@ -28,7 +28,6 @@ import {
   BadRequestError,
   globalErrorHandler,
 } from "./middlewares/globalErrorHandler";
-import { isAuth } from "./middlewares/isAuth";
 app.use(globalErrorHandler);
 
 export default app;

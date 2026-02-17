@@ -23,10 +23,19 @@ export const getDebts = async (
   { size, page }: { size: number; page: number },
 ) => {
   const offset = (page - 1) * size;
+
   const { rows } = await pool.query(
-    `SELECT d.*, c.name AS customer_name FROM debts d JOIN customers c ON d.company_id = $1 AND d.customer_id = c.id ORDER BY d.created_at DESC LIMIT $2 OFFSET $3`,
+    `SELECT d.*, c.name AS customer_name
+     FROM debts d
+     JOIN customers c ON d.customer_id = c.id
+     WHERE d.company_id = $1
+       AND d.deleted_at IS NULL
+       AND c.deleted_at IS NULL
+     ORDER BY d.created_at DESC
+     LIMIT $2 OFFSET $3`,
     [companyId, size, offset],
   );
+
   return rows;
 };
 
@@ -52,8 +61,13 @@ export const updateDebtStatus = async (
 
 export const deleteDebt = async (companyId: number, id: string) => {
   const { rowCount } = await pool.query(
-    `DELETE FROM debts WHERE company_id = $1 AND id = $2`,
+    `UPDATE debts 
+     SET deleted_at = NOW()
+     WHERE company_id = $1 
+     AND id = $2
+     AND deleted_at IS NULL`,
     [companyId, id],
   );
-  return rowCount !== null && rowCount > 0;
+
+  return !!rowCount && rowCount > 0;
 };

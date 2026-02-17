@@ -24,9 +24,14 @@ export const createCustomer = async (
 
 export const getCustomers = async (companyId: number) => {
   const { rows } = await pool.query(
-    `SELECT * FROM customers WHERE company_id = $1 ORDER BY created_at DESC`,
+    `SELECT *
+     FROM customers
+     WHERE company_id = $1
+       AND deleted_at IS NULL
+     ORDER BY created_at DESC`,
     [companyId],
   );
+
   return rows;
 };
 
@@ -40,8 +45,13 @@ export const getCustomerById = async (companyId: number, id: string) => {
 
 export const deleteCustomer = async (companyId: number, id: string) => {
   const { rowCount } = await pool.query(
-    `DELETE FROM customers WHERE company_id = $1 AND id = $2`,
+    `UPDATE customers
+     SET deleted_at = NOW()
+     WHERE company_id = $1
+       AND id = $2
+       AND deleted_at IS NULL`,
     [companyId, id],
   );
-  return rowCount !== null && rowCount > 0;
+
+  return !!rowCount && rowCount > 0;
 };

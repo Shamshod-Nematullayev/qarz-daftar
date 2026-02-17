@@ -2,19 +2,26 @@ import { Socket, Server } from "socket.io";
 import http from "http";
 import express from "express";
 import jwt from "jsonwebtoken";
-const app = express();
+import app from "../app";
 const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: true,
+    origin: "*",
     credentials: true,
   },
+  path: "/socket.io",
 });
 
-const usersMapSocket: { [key: string]: string[] } = {};
+const usersMapSocket: {
+  [key: string]: {
+    socketIds: string[];
+    companyId: number;
+  };
+} = {};
 io.on("connection", (socket: Socket) => {
   try {
+    console.log("New socket connection:", socket.id);
     const decoded = jwt.verify(
       socket.handshake.query.accessToken as string,
       process.env.SECRET_JWT_KEY as string,
@@ -24,16 +31,21 @@ io.on("connection", (socket: Socket) => {
       username: string;
     };
 
-    if (!usersMapSocket[decoded.userId]) usersMapSocket[decoded.userId] = [];
-    usersMapSocket[decoded.userId].push(socket.id);
+    if (!usersMapSocket[decoded.userId])
+      usersMapSocket[decoded.userId] = {
+        socketIds: [],
+        companyId: decoded.companyId,
+      };
+    usersMapSocket[decoded.userId].socketIds.push(socket.id);
     console.log({ usersMapSocket });
 
     socket.on("disconnect", () => {
-      usersMapSocket[decoded.userId] = usersMapSocket[decoded.userId].filter(
-        (id) => id !== socket.id,
-      );
+      usersMapSocket[decoded.userId].socketIds = usersMapSocket[
+        decoded.userId
+      ].socketIds.filter((id) => id !== socket.id);
     });
   } catch (error: any) {
+    console.error("Error during socket connection:", error);
     if ("message" in error) {
       console.error(error.message);
     }

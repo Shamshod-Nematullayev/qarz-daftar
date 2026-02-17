@@ -44,7 +44,7 @@ export const createDebtController = async (req: Request, res: Response) => {
     dueDate,
   );
 
-  socketIoService.emitToUser(req.user.id, "new_debt", {
+  socketIoService.emitToCompany(req.user.companyId, "new_debt", {
     id: debt.id,
     productName: debt.product_name,
     amount: debt.amount,
@@ -80,7 +80,7 @@ export const payDebtController = async (req: Request, res: Response) => {
   if (!debt) {
     return res.status(404).json({ message: "Debt not found" });
   }
-  socketIoService.emitToUser(req.user.id, "debt_paid", {
+  socketIoService.emitToCompany(req.user.companyId, "debt_paid", {
     id: debt.id,
     productName: debt.product_name,
     amount: debt.amount,
