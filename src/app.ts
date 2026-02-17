@@ -1,7 +1,5 @@
 import express from "express";
 
-const app = express();
-
 app.use(express.json());
 
 // Import routes
@@ -29,6 +27,7 @@ import {
   globalErrorHandler,
 } from "./middlewares/globalErrorHandler";
 import { isAuth } from "./middlewares/isAuth";
+import { app } from "./config/socketConfig";
 app.use(globalErrorHandler);
 
 export default app;
