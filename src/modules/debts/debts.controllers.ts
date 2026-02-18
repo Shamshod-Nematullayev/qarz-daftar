@@ -41,7 +41,7 @@ export const createDebtController = async (req: Request, res: Response) => {
     productName,
     amount,
     givenDate,
-    dueDate,
+    dueDate
   );
 
   socketIoService.emitToCompany(req.user.companyId, "new_debt", {
@@ -135,7 +135,7 @@ export const exportDebtsController = async (req: Request, res: Response) => {
   // Set response headers for Excel
   res.setHeader(
     "Content-Type",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
   );
   res.setHeader("Content-Disposition", 'attachment; filename="debts.xlsx"');
 

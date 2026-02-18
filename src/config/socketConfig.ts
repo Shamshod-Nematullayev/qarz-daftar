@@ -24,7 +24,7 @@ io.on("connection", (socket: Socket) => {
     console.log("New socket connection:", socket.id);
     const decoded = jwt.verify(
       socket.handshake.query.accessToken as string,
-      process.env.SECRET_JWT_KEY as string,
+      process.env.JWT_SECRET as string
     ) as {
       userId: string;
       companyId: number;

@@ -24,9 +24,9 @@ class SocketIoService {
   }
 
   private getUserIdsByCompanyId(companyId: number): string[] {
-    // This is a placeholder. You should implement logic to fetch user IDs based on company ID.
-    // For example, you might query your database or maintain an in-memory mapping.
-    return [];
+    return Object.entries(usersMapSocket)
+      .filter(([_, user]) => user.companyId === companyId)
+      .map(([userId]) => userId);
   }
 }
 
